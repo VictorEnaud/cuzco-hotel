@@ -4,7 +4,6 @@ import domain.Chambre
 import domain.RépertoireDeChambres
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import usecase.TrouverLesChambresDisponibles
 
 internal class TrouverLesChambresDisponiblesTest {
     @Test
@@ -12,16 +11,16 @@ internal class TrouverLesChambresDisponiblesTest {
         // Given
         val répertoireDeChambres = object : RépertoireDeChambres {
             override fun récupérerLesChambres(): List<Chambre> {
-                return listOf(Chambre("101"))
+                return listOf(Chambre(numéro = "101", capacité = 4))
             }
         }
         val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
 
         // When
-        val chambresDisponibles = trouverLesChambresDisponibles.exécuter()
+        val chambresDisponibles = trouverLesChambresDisponibles.exécuter(nombreDePersonnes = 3)
 
         // Then
-        val chambresAttendues = listOf(Chambre("101"))
+        val chambresAttendues = listOf(Chambre(numéro = "101", capacité = 4))
         assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
     }
 
@@ -30,16 +29,34 @@ internal class TrouverLesChambresDisponiblesTest {
         // Given
         val répertoireDeChambres = object : RépertoireDeChambres {
             override fun récupérerLesChambres(): List<Chambre> {
-                return listOf(Chambre("101"), Chambre("103"))
+                return listOf(Chambre(numéro = "101", capacité = 4), Chambre(numéro = "103", capacité = 4))
             }
         }
         val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
 
         // When
-        val chambresDisponibles = trouverLesChambresDisponibles.exécuter()
+        val chambresDisponibles = trouverLesChambresDisponibles.exécuter(nombreDePersonnes = 3)
 
         // Then
-        val chambresAttendues = listOf(Chambre("101"), Chambre("103"))
+        val chambresAttendues = listOf(Chambre(numéro = "101", capacité = 4), Chambre(numéro = "103", capacité = 4))
+        assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
+    }
+
+    @Test
+    fun `doit retourner les chambres disponibles pouvant accueillir le nombre de personnes`() {
+        // Given
+        val répertoireDeChambres = object : RépertoireDeChambres {
+            override fun récupérerLesChambres(): List<Chambre> {
+                return listOf(Chambre(numéro = "101", capacité = 2), Chambre(numéro = "103", capacité = 4))
+            }
+        }
+        val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
+
+        // When
+        val chambresDisponibles = trouverLesChambresDisponibles.exécuter(nombreDePersonnes = 3)
+
+        // Then
+        val chambresAttendues = listOf(Chambre(numéro = "103", capacité = 4))
         assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
     }
 }
