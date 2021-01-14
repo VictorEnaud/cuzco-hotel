@@ -11,7 +11,7 @@ internal class TrouverLesChambresDisponiblesTest {
         // Given
         val répertoireDeChambres = object : RépertoireDeChambres {
             override fun récupérerLesChambres(): List<Chambre> {
-                return listOf(Chambre(numéro = "101", capacité = 4))
+                return listOf(Chambre(numéro = "101", capacité = 4, estLibre = true))
             }
         }
         val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
@@ -20,7 +20,7 @@ internal class TrouverLesChambresDisponiblesTest {
         val chambresDisponibles = trouverLesChambresDisponibles.exécuter(nombreDePersonnes = 3)
 
         // Then
-        val chambresAttendues = listOf(Chambre(numéro = "101", capacité = 4))
+        val chambresAttendues = listOf(Chambre(numéro = "101", capacité = 4, estLibre = true))
         assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
     }
 
@@ -29,7 +29,11 @@ internal class TrouverLesChambresDisponiblesTest {
         // Given
         val répertoireDeChambres = object : RépertoireDeChambres {
             override fun récupérerLesChambres(): List<Chambre> {
-                return listOf(Chambre(numéro = "101", capacité = 4), Chambre(numéro = "103", capacité = 4))
+                return listOf(Chambre(numéro = "101", capacité = 4, estLibre = true), Chambre(
+                    numéro = "103",
+                    capacité = 4,
+                    estLibre = true
+                ))
             }
         }
         val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
@@ -38,7 +42,11 @@ internal class TrouverLesChambresDisponiblesTest {
         val chambresDisponibles = trouverLesChambresDisponibles.exécuter(nombreDePersonnes = 3)
 
         // Then
-        val chambresAttendues = listOf(Chambre(numéro = "101", capacité = 4), Chambre(numéro = "103", capacité = 4))
+        val chambresAttendues = listOf(Chambre(numéro = "101", capacité = 4, estLibre = true), Chambre(
+            numéro = "103",
+            capacité = 4,
+            estLibre = true
+        ))
         assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
     }
 
@@ -47,7 +55,11 @@ internal class TrouverLesChambresDisponiblesTest {
         // Given
         val répertoireDeChambres = object : RépertoireDeChambres {
             override fun récupérerLesChambres(): List<Chambre> {
-                return listOf(Chambre(numéro = "101", capacité = 2), Chambre(numéro = "103", capacité = 4))
+                return listOf(Chambre(numéro = "101", capacité = 2, estLibre = true), Chambre(
+                    numéro = "103",
+                    capacité = 4,
+                    estLibre = true
+                ))
             }
         }
         val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
@@ -56,7 +68,30 @@ internal class TrouverLesChambresDisponiblesTest {
         val chambresDisponibles = trouverLesChambresDisponibles.exécuter(nombreDePersonnes = 3)
 
         // Then
-        val chambresAttendues = listOf(Chambre(numéro = "103", capacité = 4))
+        val chambresAttendues = listOf(Chambre(numéro = "103", capacité = 4, estLibre = true))
+        assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
+    }
+
+    @Test
+    fun `doit retourner les chambres disponibles aux dates demandées`() {
+        // Given
+        val répertoireDeChambres = object : RépertoireDeChambres {
+            override fun récupérerLesChambres(): List<Chambre> {
+                return listOf(
+                    Chambre(numéro = "101", capacité = 2, estLibre=false),
+                    Chambre(numéro = "103", capacité = 4, estLibre=true)
+                )
+            }
+        }
+        val trouverLesChambresDisponibles = TrouverLesChambresDisponibles(répertoireDeChambres)
+
+        // When
+        val chambresDisponibles = trouverLesChambresDisponibles.exécuter(
+            nombreDePersonnes = 2
+        )
+
+        // Then
+        val chambresAttendues = listOf(Chambre(numéro = "103", capacité = 4, estLibre = true))
         assertThat(chambresDisponibles).isEqualTo(chambresAttendues)
     }
 }
