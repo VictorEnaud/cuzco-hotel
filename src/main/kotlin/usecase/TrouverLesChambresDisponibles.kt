@@ -1,9 +1,10 @@
 package usecase
 
 import domain.Chambre
+import domain.RépertoireDeChambres
 
-class TrouverLesChambresDisponibles {
+class TrouverLesChambresDisponibles(private val répertoireDeChambres: RépertoireDeChambres) {
     fun exécuter(): List<Chambre> {
-        return listOf(Chambre("101"))
+        return répertoireDeChambres.récupérerLesChambres()
     }
 }
